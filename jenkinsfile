@@ -1,0 +1,70 @@
+oode {
+t@vmadminwer:~/ansiblerepo# vim
+
+ try  {
+  notify('Job Started') 
+  
+  environment {
+    registry = "ruchi672/capstoneproject"
+    registryCredential = 'Deepak@672'
+  }
+
+     
+  stage('Git-Checkout') {
+   git 'https://github.com/ruchi672/ansiblerepo.git'
+  }
+    
+ //def project_path="capstoneproject/capstoneproject/"
+ 
+// dir(project_path) {
+    
+  stage('Download package from JFrog') {
+            def server= Artifactory.server 'Artifactory'
+            def downloadSpec = """{
+            "files": [
+            {
+                "pattern": "capstoneproject/capstoneproject-0.0.1-SNAPSHOT.war",
+                "target": "./capstoneproject.war"
+            }
+            ]
+            }"""
+        server.download(downloadSpec)
+    }
+       
+ stage('Docker-Stage-Deployment') {
+   sh label: '', script: 'docker-compose up -d --build'
+  }
+  
+  stage('Pushing DockerImage to DockerHub') {
+	  docker.withRegistry('', 'ruchi-dockerhub' ) {
+		    sh label: '', script: 'docker push ruchi672/capstoneproject:$BUILD_NUMBER'
+		  }
+   
+  }
+  
+  stage('Production - Provisioning Approval') {
+  	input "Start provisioning the production server?"
+  }
+  stage('Downstream Build -- Docker Deployment'){
+	 build 'pipe-Terraform'
+	}
+//}	-----------dir end---------  
+
+ notify('Job Completed')   
+} catch (err) {
+  notify("Error ${err}")
+  currentBuild.result = 'FAILURE'
+}
+
+}
+
+
+
+def notify(status){
+    emailext (
+	to: "saicharan713@gmail.com",
+	subject: "${status}: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
+	 body: """<p>${status}: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]':</p>
+	<p>Check console output at <a href='${env.BUILD_URL}'>${env.JOB_NAME} [${env.BUILD_NUMBER}]</a></p>""",
+		)
+	}
