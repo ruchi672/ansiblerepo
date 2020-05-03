@@ -1,9 +1,9 @@
 variable "key_name" {
-  default = "meghanamumbai"
+  default = "terraform-keypair"
 }
 
 variable "pvt_key" {
-  default = "/root/.ssh/mkey.pem"
+  default = "/root/.ssh/keypair.pem"
 }
 
 variable "us-east-zones" {
@@ -11,5 +11,5 @@ variable "us-east-zones" {
 }
 
 variable "sg-id" {
-  default = "sg-0eb024eb164eb86c0"
+  default = "sg-0b2bb490c2674ce97"
 }
