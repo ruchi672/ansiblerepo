@@ -3,12 +3,9 @@ node {
   notify('Job Started') 
      
   stage('Git-Checkout') {
-   git 'https://github.com/SaiCharanUppari/terraformrepo.git'
+   git 'https://github.com/ruchi672/ansiblerepo.git'
   }
     
- //def project_path="capstoneproject/capstoneproject/"
- 
-// dir(project_path) {
 
 	stage('AWS - Production Server Provisioning'){
 	   sh label: 'terraform', script: '/root/bin/terraform  init'
@@ -20,7 +17,6 @@ node {
 		}
   
    
-//}	-----------dir end---------  
 
  notify('Job Completed')   
 } catch (err) {
@@ -33,7 +29,7 @@ node {
 
 def notify(status){
     emailext (
-	to: "saicharan713@gmail.com",
+	to: "ruchibhadani555@gmail.com",
 	subject: "${status}: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
 	 body: """<p>${status}: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]':</p>
 	<p>Check console output at <a href='${env.BUILD_URL}'>${env.JOB_NAME} [${env.BUILD_NUMBER}]</a></p>""",
