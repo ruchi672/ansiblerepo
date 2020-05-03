@@ -7,7 +7,7 @@ t@vmadminwer:~/ansiblerepo# vim
 
    
   stage('Git-Checkout') {
-   git 'https://github.com/SaiCharanUppari/ansiblerepository.git'
+   git 'https://github.com/ruchi672/ansiblerepo.git'
   }
   
  
