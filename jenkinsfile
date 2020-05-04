@@ -5,20 +5,8 @@ node {
   stage('Git-Checkout') {
    git 'https://github.com/ruchi672/ansiblerepo.git'
   }
-    
-
-	stage('AWS - Production Server Provisioning'){
-	   sh label: 'terraform', script: '/root/bin/terraform  init'
-	   sh label: 'terraform', script: '/root/bin/terraform  apply -input=false -auto-approve'
-	   }
-	/*   
-	   stage('Downstream Build -- Ansible Deployment'){
-		 	build 'pipe-Ansible'
-		}
-  */
-
-
-stage('Download package from JFrog') {
+ 
+ stage('Download package from JFrog') {
             def server= Artifactory.server 'artifactory'
             def downloadSpec = """{
             "files": [
@@ -30,11 +18,22 @@ stage('Download package from JFrog') {
             }"""
         server.download(downloadSpec)
     }
-    
+
+	stage('AWS - Production Server Provisioning'){
+	   sh label: 'terraform', script: '/root/bin/terraform  init'
+	   sh label: 'terraform', script: '/root/bin/terraform  apply -input=false -auto-approve'
+	   }
+	/*   
+	   stage('Downstream Build -- Ansible Deployment'){
+		 	build 'pipe-Ansible'
+		}
+  */
+
+    /*
     stage('Deployment into production'){
  	 sh label: 'terraform', script: 'ansible-playbook -i inventory -u ubuntu --key /root/.ssh/keypair.pem web-playbook.yml'
      }
-   
+   */
 
  notify('Job Completed')   
 } catch (err) {
