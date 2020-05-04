@@ -42,7 +42,7 @@ provisioner "local-exec" {
         echo "[web]"| tee -a inventory;
         export ANSIBLE_HOST_KEY_CHECKING=False;
         echo "${aws_instance.backend.public_ip}" | tee -a inventory;
-ansible-playbook  --key=${var.pvt_key} -i inventory web-playbook.yaml -u ubuntu -v
+ansible-playbook  --key=${var.pvt_key} -i inventory web-playbook.yml -u ubuntu -v
     EOT
 }
 }
